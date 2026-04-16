@@ -6,27 +6,27 @@ Nginx (auth + reverse proxy)
 Docker Kibana (5601 exposed BUT controlled via firewall/Nginx)
 ```
 
-# FILES TO CREATE/MODIFY
+## FILES TO CREATE/MODIFY
 
-## 1. Nginx site config
+### 1. Nginx site config
 
 ```
 /etc/nginx/sites-available/kibana
 ```
 
-## 2. Enabled symlink
+### 2. Enabled symlink
 
 ```
 /etc/nginx/sites-enabled/kibana
 ```
 
-## 3. Authentication file (multi-user)
+### 3. Authentication file (multi-user)
 
 ```
 /etc/nginx/.htpasswd
 ```
 
-## 4. (optional) firewall rule
+### 4. (optional) firewall rule
 
 ```
 ufw or iptables
@@ -34,7 +34,7 @@ ufw or iptables
 
 ---
 
-# STEP 1 — INSTALL REQUIRED PACKAGES
+## STEP 1 — INSTALL REQUIRED PACKAGES
 
 ```bash
 sudo apt update
@@ -43,11 +43,11 @@ sudo apt install nginx apache2-utils -y
 
 ---
 
-# STEP 2 — CREATE MULTI-USER LOGIN FILE
+## STEP 2 — CREATE MULTI-USER LOGIN FILE
 
 We create a password file that Nginx will use.
 
-## Create first user:
+### Create first user:
 
 ```bash
 sudo htpasswd -c /etc/nginx/.htpasswd admin
@@ -57,7 +57,7 @@ sudo htpasswd -c /etc/nginx/.htpasswd admin
 
 ---
 
-## Add more users:
+### Add more users:
 
 ```bash
 sudo htpasswd /etc/nginx/.htpasswd user1
@@ -67,7 +67,7 @@ sudo htpasswd /etc/nginx/.htpasswd user2
 
 ---
 
-# STEP 3 — CREATE NGINX CONFIG
+## STEP 3 — CREATE NGINX CONFIG
 
 Create file:
 
@@ -77,7 +77,7 @@ sudo nano /etc/nginx/sites-available/kibana
 
 ---
 
-## Paste this config:
+### Paste this config:
 
 ```nginx
 server {
@@ -107,23 +107,23 @@ server {
 
 ---
 
-# EXPLANATION OF CONFIG
+## EXPLANATION OF CONFIG
 
-## 🔐 auth_basic
+### 🔐 auth_basic
 
 * Forces browser login popup
 * Blocks access before Kibana loads
 
 ---
 
-## 👤 auth_basic_user_file
+### 👤 auth_basic_user_file
 
 * Points to `/etc/nginx/.htpasswd`
 * Contains all users
 
 ---
 
-## 🔁 proxy_pass
+### 🔁 proxy_pass
 
 ```text
 http://127.0.0.1:5601
@@ -134,7 +134,7 @@ http://127.0.0.1:5601
 
 ---
 
-## ⚡ WebSocket headers
+### ⚡ WebSocket headers
 
 Required because Kibana uses real-time features:
 
@@ -147,7 +147,7 @@ Without this:
 
 ---
 
-# STEP 4 — ENABLE SITE
+## STEP 4 — ENABLE SITE
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/
@@ -155,7 +155,7 @@ sudo ln -s /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/
 
 ---
 
-# STEP 5 — TEST CONFIG
+## STEP 5 — TEST CONFIG
 
 ```bash
 sudo nginx -t
@@ -170,7 +170,7 @@ test is successful
 
 ---
 
-# STEP 6 — RESTART NGINX
+## STEP 6 — RESTART NGINX
 
 ```bash
 sudo systemctl restart nginx
@@ -178,7 +178,7 @@ sudo systemctl restart nginx
 
 ---
 
-# STEP 7 — TEST ACCESS
+## STEP 7 — TEST ACCESS
 
 Open in browser:
 
@@ -193,11 +193,11 @@ You should see:
 
 ---
 
-# STEP 8 — BLOCK DIRECT ACCESS TO 5601 (CRITICAL)
+## STEP 8 — BLOCK DIRECT ACCESS TO 5601 (CRITICAL)
 
 Right now Kibana is still exposed by Docker.
 
-### Check:
+#### Check:
 
 ```bash
 curl http://YOUR_IP:5601
@@ -205,7 +205,7 @@ curl http://YOUR_IP:5601
 
 ---
 
-## OPTION A
+### OPTION A
 
 Block via firewall:
 
@@ -216,7 +216,7 @@ sudo ufw deny 5601
 
 ---
 
-## OPTION B 
+### OPTION B 
 
 ```bash
 sudo iptables -A INPUT -p tcp --dport 5601 -j DROP
@@ -225,7 +225,7 @@ sudo iptables -A INPUT -p tcp --dport 5601 -j DROP
 ---
 
 
-# ⚠️ LIMITATIONS (IMPORTANT)
+## ⚠️ LIMITATIONS (IMPORTANT)
 
 This is NOT full Elastic security:
 
