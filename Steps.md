@@ -109,21 +109,21 @@ server {
 
 ## EXPLANATION OF CONFIG
 
-### 🔐 auth_basic
+### auth_basic
 
 * Forces browser login popup
 * Blocks access before Kibana loads
 
 ---
 
-### 👤 auth_basic_user_file
+### auth_basic_user_file
 
 * Points to `/etc/nginx/.htpasswd`
 * Contains all users
 
 ---
 
-### 🔁 proxy_pass
+### proxy_pass
 
 ```text
 http://127.0.0.1:5601
@@ -134,7 +134,7 @@ http://127.0.0.1:5601
 
 ---
 
-### ⚡ WebSocket headers
+### WebSocket headers
 
 Required because Kibana uses real-time features:
 
@@ -143,7 +143,7 @@ Required because Kibana uses real-time features:
 * logs streaming
 
 Without this:
-❌ Kibana breaks or loads blank pages
+Kibana breaks or loads blank pages
 
 ---
 
@@ -188,7 +188,7 @@ http://YOUR_SERVER_IP/
 
 You should see:
 
-1. 🔐 Login popup (Nginx auth)
+1. Login popup (Nginx auth)
 2. After login → Kibana dashboard loads
 
 ---
@@ -222,18 +222,4 @@ sudo ufw deny 5601
 sudo iptables -A INPUT -p tcp --dport 5601 -j DROP
 ```
 
----
 
-
-## ⚠️ LIMITATIONS (IMPORTANT)
-
-This is NOT full Elastic security:
-
-* No role-based dashboards
-* No per-index permissions
-* No audit logs per user
-
-Because that requires:
-👉 Elasticsearch security (xpack) enabled
-
----
