@@ -53,7 +53,7 @@ We create a password file that Nginx will use.
 sudo htpasswd -c /etc/nginx/.htpasswd admin
 ```
 
-👉 This creates file + first user
+This creates file + first user
 
 ---
 
