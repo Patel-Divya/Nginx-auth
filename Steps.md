@@ -173,6 +173,8 @@ test is successful
 ## STEP 6 — RESTART NGINX
 
 ```bash
+sudo systemctl reload nginx
+
 sudo systemctl restart nginx
 ```
 
